@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from W06DP.ValueIteration.environment import GraphicDisplay, Env
+from environment import GraphicDisplay, Env
 
 
 # 사용방법
@@ -36,10 +36,15 @@ class ValueIteration:
                 """
                     1) 여기에 들어갈 코드를 작성하세요                
                 """
+                next_state = self.env.state_after_action(state, action)
+                reward = self.env.get_reward(state, action)
+                next_value = self.get_value(next_state)
+                value_list.append((reward + self.discount_factor * next_value))
             # 모든 행동에 대한 가치함수 값 중에서 최댓값을 다음 가치 함수로 대입
             """
                 2) 여기에 들어갈 코드를 작성하세요                
             """
+            next_value_table[state[0]][state[1]] = round(max(value_list), 2)
 
         # 모든 상태에 대한 가치함수를 한번에 업데이트
         self.value_table = next_value_table
@@ -59,6 +64,17 @@ class ValueIteration:
             """
                 3) 여기에 들어갈 코드를 작성하세요                
             """
+            next_state = self.env.state_after_action(state, action)
+            reward = self.env.get_reward(state, action)
+            next_value = self.get_value(next_state)
+            value = (reward + self.discount_factor * next_value)
+
+            if value > max_value:
+                action_list.clear()
+                action_list.append(action)
+                max_value = value
+            elif value == max_value:
+                action_list.append(action)
 
         return action_list
 
