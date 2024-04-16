@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import random
-from W05DP.PolicyIteration.environment import GraphicDisplay, Env
+from environment import GraphicDisplay, Env
 
 
 class PolicyIteration:
