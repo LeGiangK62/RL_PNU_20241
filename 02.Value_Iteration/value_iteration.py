@@ -67,13 +67,13 @@ class ValueIteration:
             next_state = self.env.state_after_action(state, action)
             reward = self.env.get_reward(state, action)
             next_value = self.get_value(next_state)
-            value = (reward + self.discount_factor * next_value)
+            temp = (reward + self.discount_factor * next_value)
 
-            if value > max_value:
+            if temp > max_value:
                 action_list.clear()
                 action_list.append(action)
-                max_value = value
-            elif value == max_value:
+                max_value = temp
+            elif temp == max_value:
                 action_list.append(action)
 
         return action_list
