@@ -32,11 +32,30 @@ class MCAgent:
         """
             1. 여기를 구현하세요
         """
+        G = 0
+        visit_state = []
+        for reward in reversed(self.samples):
+            state = str(reward[0])
+            visit_state.append(state)
+            G = self.discount_factor * (reward[1] + G)
+            value = self.value_table[state]
+            self.value_table[state] = (value +
+                                           self.learning_rate * (G - value))
 
     def update_FirstVisit(self):
         """
             2. 여기를 구현하세요
         """
+        G = 0
+        visit_state = []
+        for reward in reversed(self.samples):
+            state = str(reward[0])
+            if state not in visit_state:
+                visit_state.append(state)
+                G = self.discount_factor * (reward[1] + G)
+                value = self.value_table[state]
+                self.value_table[state] = (value +
+                                           self.learning_rate * (G - value))
 
     # 상태-가치함수에 따라서 행동을 결정
     # 다음 time-step 때 선택할 수 있는 상태들 중에서, 가장 큰 가치함수 값을 리턴하는 상태로 이동
@@ -45,6 +64,12 @@ class MCAgent:
         """
             3. 여기를 구현하세요
         """
+        if np.random.rand() < self.epsilon:
+            action = np.random.choice(self.actions)
+        else:
+            next_state = self.possible_next_state(state_)
+            action = self.arg_max(next_state)
+        return int(action)
 
     # 후보가 여럿이면 arg_max를 계산하고 무작위로 하나를 반환
     # => 정책 (pi)은 없지만, 최적의 정책을 유도하는 역할을 하는 함수
