@@ -1,7 +1,7 @@
 import numpy as np
 import random
 from collections import defaultdict
-from W06MonteCarlo.environment import Env
+from environment import Env
 
 # 0 이면 every-visit
 # 1 이면 first-visit
