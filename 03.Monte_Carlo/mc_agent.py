@@ -2,10 +2,11 @@ import numpy as np
 import random
 from collections import defaultdict
 from environment import Env
+import time
 
 # 0 이면 every-visit
 # 1 이면 first-visit
-EveryVisit0_FirstVisit1 = 0
+EveryVisit0_FirstVisit1 = 1
 
 
 # 몬테카를로 에이전트 (모든 에피소드 각의 샘플로 부터 학습)
@@ -121,6 +122,7 @@ if __name__ == "__main__":
 
     MAX_EPISODES = 1000  # 최대 에피소드 수
     for episode in range(MAX_EPISODES):
+        start_time = time.time()
         state = env.reset()  # 에피소드 시작 : 환경을 초기화하고, 상태 = 초기상태로 설정
         action = agent.get_action(state)
 
@@ -148,6 +150,8 @@ if __name__ == "__main__":
                     agent.update_EveryVisit()
                 else:
                     agent.update_FirstVisit()
+                env.print_values(agent.value_table)
                 agent.samples.clear()
+                # print(agent.value_table)
                 break
 

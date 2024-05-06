@@ -1,7 +1,7 @@
 import numpy as np
 import random
 from collections import defaultdict
-from W08Sarsa.env import Env
+from env import Env
 
 MAX_EPISODE = 1000
 
@@ -14,10 +14,15 @@ class SARSAgent:
         self.q_table = defaultdict(lambda: [0.0, 0.0, 0.0, 0.0])
 
     # 큐함수 업데이트
-    def learn(self, ???):
+    def learn(self, cur_s, cur_a, r, next_s, next_a):
         """
             2) 여기에 들어갈 내용을 구현하세요
         """
+        current_q = self.q_table[cur_s][cur_a]
+        next_state_q = self.q_table[next_s][next_a]
+        new_q = (current_q + self.learning_rate *
+                 (r + self.discount_factor * next_state_q - current_q))
+        self.q_table[cur_s][cur_a] = new_q
 
     # 입실론 탐욕 정책에 따라서 행동을 반환
     def get_action(self, state):
@@ -30,7 +35,6 @@ class SARSAgent:
             best_action = self.arg_max(state_action)
         return best_action
 
-    """
     @staticmethod
     def arg_max(state_action):
         max_index_list = []
@@ -43,7 +47,6 @@ class SARSAgent:
             elif value == max_value:
                 max_index_list.append(index)
         return random.choice(max_index_list)
-    """
 
     @staticmethod
     def arg_max(state_action):
@@ -78,6 +81,12 @@ if __name__ == "__main__":
             """
                 1) 여기에 들어갈 내용을 구현하세요.
             """
+            next_state, reward, done = env.step(action)
+            next_action = agent.get_action(str(next_state))
+            agent.learn(str(state), action, reward, str(next_state), next_action)
+
+            state = next_state
+            action = next_action
 
             # 모든 큐함수 값을 화면에 표시
             env.print_value_all(agent.q_table)

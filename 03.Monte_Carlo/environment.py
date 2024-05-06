@@ -109,3 +109,20 @@ class Env(tk.Tk):
     def render(self):
         time.sleep(0.03)
         self.update()
+
+    def text_value(self, row, col, contents, font='Helvetica', size=12,
+                   style='normal', anchor="nw"):
+        origin_x, origin_y = 85, 70
+        x, y = origin_y + (UNIT * col), origin_x + (UNIT * row)
+        font = (font, str(size), style)
+        text = self.canvas.create_text(x, y, fill="black", text=round(contents,1),
+                                       font=font, anchor=anchor)
+        return self.texts.append(text)
+
+    def print_values(self, values):
+        for i in self.texts:
+            self.canvas.delete(i)
+        for i in range(WIDTH):
+            for j in range(HEIGHT):
+                self.text_value(j, i, values[str([i,j])])
+
