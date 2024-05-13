@@ -1,6 +1,6 @@
 import numpy as np
 import random
-from W09QLearning.env import Env
+from env import Env
 from collections import defaultdict
 
 
@@ -8,7 +8,7 @@ class QLearningAgent:
     def __init__(self, actions):
         # 행동 = [0, 1, 2, 3] 순서대로 상, 하, 좌, 우
         self.actions = actions
-        self.learning_rate = 0.01  # 학습률, 2)번 문제
+        self.learning_rate = 0.05  # 학습률, 2)번 문제
         self.discount_factor = 0.9  # 감가율, 3)번 문제
         self.epsilon = 0.05  # 랜덤 행동을 할 확률
         self.q_table = defaultdict(lambda: [0.0, 0.0, 0.0, 0.0])
@@ -18,6 +18,9 @@ class QLearningAgent:
         """
             1) 여기에 들어갈 코드를 작성하세요.
         """
+        cur_q = self.q_table[state][action]
+        new_q = reward + self.discount_factor * max(self.q_table[next_state])
+        self.q_table[state][action] += self.learning_rate * (new_q - cur_q)
 
     # 입실론 탐욕 정책에 따라서 행동을 선택
     def get_action(self, state):
@@ -52,6 +55,7 @@ if __name__ == "__main__":
     EPISODE_MAX = 1000
     for episode in range(EPISODE_MAX):
         state = env.reset()  # 환경을 초기화 하고, 초기 상태 s 를 얻기.
+        print('Episode [' + str(episode) + ']')
 
         while True:  # 현재 episode가 끝날 때 까지 반복
             env.render()
