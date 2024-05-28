@@ -3,14 +3,15 @@ import random
 from collections import defaultdict
 from env import Env
 
-MAX_EPISODE = 1000
+MAX_EPISODE = 100
 
 class SARSAgent:
     def __init__(self, actions):
         self.actions = actions
         self.learning_rate = 0.01
         self.discount_factor = 0.9
-        self.epsilon = 0.1  # 3) 시간이 지날수록 e 값이 감소하도록 코드를 수정하세요.
+        self.epsilon = 1  # 3) 시간이 지날수록 e 값이 감소하도록 코드를 수정하세요.
+        self.eps_step = 0.9
         self.q_table = defaultdict(lambda: [0.0, 0.0, 0.0, 0.0])
 
     # 큐함수 업데이트
@@ -35,6 +36,7 @@ class SARSAgent:
             best_action = self.arg_max(state_action)
         return best_action
 
+    """
     @staticmethod
     def arg_max(state_action):
         max_index_list = []
@@ -47,6 +49,7 @@ class SARSAgent:
             elif value == max_value:
                 max_index_list.append(index)
         return random.choice(max_index_list)
+    """
 
     @staticmethod
     def arg_max(state_action):
@@ -61,6 +64,9 @@ class SARSAgent:
                 max_index_list.append(index)
         return random.choice(max_index_list)
 
+    def decaying_epsilon(self):
+        self.epsilon = self.epsilon * self.eps_step
+
 
 if __name__ == "__main__":
     env = Env()  # 환경에 대한 instance 생성
@@ -74,6 +80,11 @@ if __name__ == "__main__":
         # 현재 상태에서 어떤 행동을 할지 선택
         action = agent.get_action(str(state))
 
+        print('Episode [' + str(episode) + '] begins at state ' + str(state))
+
+        if episode % 5 == 0:
+            print(f'Runing with eps = {agent.epsilon}')
+
         # 한개의 episode를 처음부터 끝까지 처리하는 while-loop
         while True:
             env.render()
@@ -82,6 +93,10 @@ if __name__ == "__main__":
                 1) 여기에 들어갈 내용을 구현하세요.
             """
             next_state, reward, done = env.step(action)
+
+            if agent.epsilon > 0.001:
+                agent.decaying_epsilon()
+
             next_action = agent.get_action(str(next_state))
             agent.learn(str(state), action, reward, str(next_state), next_action)
 
