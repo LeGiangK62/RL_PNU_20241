@@ -5,7 +5,7 @@ import numpy as np
 from keras.layers import Dense
 from keras.optimizers import Adam
 from keras.models import Sequential
-from W10DeepSarsa.env import Env
+from env import Env
 
 
 EPISODE_LIMIT = 1000
